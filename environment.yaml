@@ -1,0 +1,8 @@
+name: sentsci
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7 
+  - nltk
+  - pip:
+    - plac
