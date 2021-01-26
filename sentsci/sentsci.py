@@ -15,3 +15,4 @@ def split(text):
     text = re.sub(r"\!\s", r"!<splitter>", text)
 
     return text.split("<splitter>")
+
