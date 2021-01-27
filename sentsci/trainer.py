@@ -1,6 +1,6 @@
 import nltk
-from data import load_nltk_sentences
-
+from sentsci.data import load_nltk_sentences
+import pandas as pd
 
 def train_nb_model(sents):
     print(len(sents))
@@ -12,7 +12,13 @@ def train_nb_model(sents):
         offset += len(sent)
         boundaries.add(offset-1)
 
-    featuresets = [(punct_features(tokens, i), (i in boundaries)) for i in range(1, len(tokens)-1) if tokens[i] in '.?!']
+    featuresets = [
+        (
+            punct_features(tokens, i),
+            (i in boundaries)
+        )
+        for i in range(1, len(tokens)-1) if tokens[i] in '.?!'
+    ]
 
     size = int(len(featuresets) * 0.1)
     train_set, test_set = featuresets[size:], featuresets[:size]
@@ -23,7 +29,7 @@ def train_nb_model(sents):
 
 
 def punct_features(tokens, i):
-    return {'next-word-capitalized': tokens[i+1][0].isupper(),
+    return {'next-word-capitalized': tokens[i+1][0].isupper() if len(tokens) <=i else True,
             'prev-word': tokens[i-1].lower(),
             'punct': tokens[i],
             'prev-word-is-one-char': len(tokens[i-1]) == 1}
@@ -38,6 +44,3 @@ def train_nb_segmenter():
         model = train_nb_model(sents)
     return model
 
-
-if __name__ == '__main__':
-    train_nb_segmenter()
